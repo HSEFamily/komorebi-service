@@ -1,6 +1,6 @@
 from flask import Flask
 
-from komorebi.webservice.userservice import user_service
+from komorebi.web_service.user_service import user_service
 
 app = Flask(__name__)
 app.register_blueprint(user_service)
