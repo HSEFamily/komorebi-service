@@ -8,7 +8,7 @@ app.register_blueprint(user_service)
 
 @app.route('/')
 def index():
-    return 'Hello world!'
+    return 'Nobody loves me it`s true not like you do'
 
 
 if __name__ == "__main__":
