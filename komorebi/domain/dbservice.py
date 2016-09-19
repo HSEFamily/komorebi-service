@@ -20,6 +20,3 @@ class DBService(ADBService):
 
     def delete_club(self, club):
         pass
-
-    def a(self):
-        pass
