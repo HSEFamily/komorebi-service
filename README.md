@@ -18,5 +18,7 @@
     4. Активировать virtualenv: source /venv/bin/active
     5. Установить необходимые библиотеки: pip install requirements.txt
     6. Начать работу в dev ветке
+    7. Написать тесты в своем пакете в папке komorebi-test
+
 
 
