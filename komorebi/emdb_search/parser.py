@@ -1,7 +1,8 @@
 from grab import Grab
 import pprint
-import os
 import re
+import os
+
 
 debug = False
 
