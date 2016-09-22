@@ -185,14 +185,57 @@ class Parser:
 
         return film
 
+    def serch_film(self, name):
+        self._g.setup(url='https://www.kinopoisk.ru/index.php?level=7&m_act%5Bwhat%5D=content&m_act%5Bfind%5D=' + name)
+        self._g.request()
+        pq = self._g.doc.pyquery
+
+        elements = []
+
+        def parse_element(i, el):
+            try:
+                pqel = pq(el)
+                new_el = {}
+                new_el['name'] = pqel('p.name a').text()
+                new_el['id'] = pqel('p.name a').attr('data-id')
+                new_el['picture'] = 'https://st.kp.yandex.net/images/film/' + new_el['id'] + '.jpg'
+                new_el['year'] = pqel('span.year').text()
+                new_el['time'] = pqel('div.info span').eq(1).text().split(',')[-1]
+                new_el['director'] = pqel('i.director').text()
+                try:
+                    new_el['genre'] = pqel('div.info span').eq(2).text().split('(')[1][:-1].split(',')
+                except Exception as e:
+                    new_el['genre'] = []
+                new_el['actors'] = []
+                try:
+                    pqel('div.info span').eq(3)('a.lined').each(lambda i, item: (
+                        new_el['actors'].append(pq(item).text())
+                    ))
+                    if len(new_el['actors']) > 0 and new_el['actors'][-1] == '...':
+                        new_el['actors'].remove(new_el['actors'][-1])
+                except Exception as e:
+                    pass
+
+                elements.append(new_el)
+            except Exception as e:
+                if debug:
+                    raise e
+
+        pq('div.element').each(parse_element)
+        return elements
+
 
 class Test:
     def __init__(self):
         self.parser = Parser()
 
-    def test_request(self):
-        pprint.pprint(self.parser.find_film('Три типа и скрипач', None))
+    def test_film_request(self):
+        pprint.pprint(self.parser.find_film('Поймай меня если сможешь', None))
+
+    def test_search_request(self):
+        pprint.pprint(self.parser.serch_film('оывадлоырадрывадпрвдапрдыврапрловрплор'))
 
 if __name__ == '__main__':
     tester = Test()
-    tester.test_request()
+    tester.test_search_request()
+
