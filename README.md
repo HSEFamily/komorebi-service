@@ -1,8 +1,24 @@
 # Komorebi
 Сервис для поиска кино, проставления оценов и организации киноклубов.
-Основную информацию можно найти по [ссылке](https://github.com/HSEFamily/komorebi/README.md).
+Основную информацию можно найти по [ссылке](https://github.com/HSEFamily/Komorebi/blob/master/README.md).
 
 ### Для разработчиков:
+
+Объявление:
+ВНИМАНИЕ! Для обращения к базе данных нужно инжектировать объект DBServiceImpl, который содержит все необходимые методы для работы с БД, с помощью следующего вызова:
+
+```python
+from ..config import DBConfig
+
+injector = Injector(DBConfig())
+dbservice = injector.get(DBService)
+```
+Дальнейшая работа с ним представляет собой вызовы типа:
+```python
+# получение данных о пользователи с уникальным идентификатором, равным 25
+user = dbservice.find_user(25)
+pprint.pprint(user)
+```
 
 Распределение ролей:
 
