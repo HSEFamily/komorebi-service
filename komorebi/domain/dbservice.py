@@ -24,19 +24,19 @@ class DBService:
         pass
 
     @abstractmethod
-    def delete_user(self, user):
+    def delete_user(self, user_id):
         pass
 
     @abstractmethod
-    def delete_club(self, club):
+    def delete_club(self, club_id):
         pass
 
 
 class DBServiceImpl(DBService):
 
     def save_user(self, user):
-        _q = Query.construct(**self.config).save(user)
-        _last_id = _q.exec().fetch_one()
+        _q = Query.construct(**self.config).save(user).returning('id')
+        _last_id = _q.fetch_one()
         user["id"] = _last_id
         return user
 
