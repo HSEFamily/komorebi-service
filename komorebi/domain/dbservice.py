@@ -1,7 +1,34 @@
-from komorebi.domain.adbservice import ADBService
+from abc import abstractmethod
 
 
-class DBService(ADBService):
+class DBService:
+
+    @abstractmethod
+    def save_user(self, user):
+        pass
+
+    @abstractmethod
+    def update_user(self, user):
+        pass
+
+    @abstractmethod
+    def create_club(self, club):
+        pass
+
+    @abstractmethod
+    def find_user(self, **kwargs):
+        pass
+
+    @abstractmethod
+    def delete_user(self, user):
+        pass
+
+    @abstractmethod
+    def delete_club(self, club):
+        pass
+
+
+class DBServiceImpl(DBService):
 
     def save_user(self, user):
         pass
