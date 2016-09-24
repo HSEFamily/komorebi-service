@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from grab import Grab
 import pprint
 import re
@@ -8,6 +9,17 @@ debug = False
 
 
 class Parser:
+
+    @abstractmethod
+    def find_film(self, name, info_elements):
+        pass
+
+    @abstractmethod
+    def search_film(self, name):
+        pass
+
+
+class ParserImplement(Parser):
     def __init__(self):
         self._g = Grab()
         if debug:
@@ -185,7 +197,7 @@ class Parser:
 
         return film
 
-    def serch_film(self, name):
+    def search_film(self, name):
         self._g.setup(url='https://www.kinopoisk.ru/index.php?level=7&m_act%5Bwhat%5D=content&m_act%5Bfind%5D=' + name)
         self._g.request()
         pq = self._g.doc.pyquery
@@ -227,13 +239,13 @@ class Parser:
 
 class Test:
     def __init__(self):
-        self.parser = Parser()
+        self.parser = ParserImplement()
 
     def test_film_request(self):
         pprint.pprint(self.parser.find_film('Поймай меня если сможешь', None))
 
     def test_search_request(self):
-        pprint.pprint(self.parser.serch_film('оывадлоырадрывадпрвдапрдыврапрловрплор'))
+        pprint.pprint(self.parser.search_film('привет'))
 
 if __name__ == '__main__':
     tester = Test()
