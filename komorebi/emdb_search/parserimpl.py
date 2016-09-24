@@ -19,7 +19,7 @@ class Parser:
         pass
 
 
-class ParserImplement(Parser):
+class ParserImpl(Parser):
     def __init__(self):
         self._g = Grab()
         if debug:
@@ -239,7 +239,7 @@ class ParserImplement(Parser):
 
 class Test:
     def __init__(self):
-        self.parser = ParserImplement()
+        self.parser = ParserImpl()
 
     def test_film_request(self):
         pprint.pprint(self.parser.find_film('Поймай меня если сможешь', None))
