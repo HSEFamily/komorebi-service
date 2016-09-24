@@ -41,7 +41,7 @@ class DBServiceImpl(DBService):
         return user
 
     def update_user(self, user):
-        Query.construct(tb='users', **self.config)\
+        Query.construct(**self.config)\
             .update(user)\
             .exec()
         return user
@@ -50,7 +50,7 @@ class DBServiceImpl(DBService):
         pass
 
     def find_user(self, user_id):
-        return Query.construct(tb='users', **self.config)\
+        return Query.construct(**self.config).table('users')\
             .find()\
             .where('id = {}'.format(user_id))\
             .fetch_one()
