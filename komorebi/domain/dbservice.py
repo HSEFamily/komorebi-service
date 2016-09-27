@@ -16,7 +16,11 @@ class DBService:
         pass
 
     @abstractmethod
-    def create_club(self, club):
+    def create_club(self, club, owner_id):
+        pass
+
+    @abstractmethod
+    def update_club(self, club):
         pass
 
     @abstractmethod
@@ -29,6 +33,10 @@ class DBService:
 
     @abstractmethod
     def delete_club(self, club_id):
+        pass
+
+    @abstractmethod
+    def find_club_members(self, club_id):
         pass
 
 
@@ -67,11 +75,43 @@ class DBServiceImpl(DBService):
             .where('id = {}'.format(user_id))\
             .exec()
 
-    def create_club(self, club):
-        pass
+    def create_club(self, club, owner_id):
+        q = Query.construct(**self.config)
+        club_id = q.table('clubs')\
+            .save(**club)\
+            .returning('id')\
+            .fetch_one()['id']
+        q.table('users_clubs').save(
+            user_id=owner_id,
+            club_id=club_id,
+            user_role='owner'
+        ).exec()
+        club['id'] = club_id
+        return club
+
+    def update_club(self, club):
+        q = Query.construct(**self.config)
+        q.table('clubs').update(club).where('id = {}'.format(club['id']))
+        q.exec()
+        return club
 
     def delete_club(self, club_id):
-        Query.construct(tb='clubs', **self.config)\
+        q = Query.construct(**self.config)
+        q.table('users_clubs')\
             .delete()\
-            .where('id = {}'.format(club_id))\
+            .where('club_id = {}'.format(club_id))\
             .exec()
+        q.table('clubs')\
+            .delete()\
+            .where('id = {}'.format(club_id))
+
+    def find_club_members(self, club_id):
+        q = Query.construct(**self.config)
+        q.table('users_clubs').find('users.id as id',
+                                    'first_name',
+                                    'last_name',
+                                    'email',
+                                    'user_name',
+                                    'password')\
+            .join('users', {'user_id': 'id'}).where('users_clubs.club_id = {}'.format(club_id))
+        return q.fetch_all()

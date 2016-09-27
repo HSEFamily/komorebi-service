@@ -23,7 +23,7 @@ class DomainTest(unittest.TestCase):
     def test_update_user(self):
         inj = Injector(DBConfig())
         user = {
-            'id': 2,
+            'id': 1,
             'first_name': 'Robert',
             'last_name': 'Smith',
             'email': 'disintegration@cure.com',
@@ -33,11 +33,34 @@ class DomainTest(unittest.TestCase):
         dbs = inj.get(DBService)
         pprint.pprint(dbs.update_user(user))
 
+    def test_delete_user(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        dbs.delete_user(1)
+        user = dbs.find_user(1)
+        self.assertIsNone(user)
+
     def test_find_user(self):
         inj = Injector(DBConfig())
         dbs = inj.get(DBService)
-        user = dbs.find_user(2)
+        user = dbs.find_user(1)
         self.assertIsNotNone(user)
         pprint.pprint(user)
 
+    def test_create_club(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        club = {
+            'name': 'The Cure',
+            'description': 'Most gothic band'
+        }
+        dbs.create_club(club, 2)
+        members = dbs.find_club_members(club['id'])
+        self.assertTrue(2 in [m['id'] for m in members])
+        pprint.pprint(club)
+        pprint.pprint(members)
 
+    def test_delete_club(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        dbs.delete_club(16)

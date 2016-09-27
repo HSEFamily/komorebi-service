@@ -1,7 +1,8 @@
 import psycopg2
+import psycopg2.extras
 
 from injector import Module, singleton, provides
-from jujuq.jujuq import SQLDialect
+from jujuq.jujuq import SQLDialect, ConnFactory
 from ..domain import DBService, DBServiceImpl
 
 
@@ -16,6 +17,15 @@ class DBConfig(Module):
             host='95.85.24.237',
             user='komorebi_psql',
             password='komorebi95root',
-            conn=psycopg2
+            conn_f=CF()
         )
+
+
+class CF(ConnFactory):
+
+    def connect(self, conn_s):
+        return psycopg2.connect(conn_s)
+
+    def cursor(self, conn):
+        return conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
