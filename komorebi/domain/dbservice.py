@@ -39,6 +39,10 @@ class DBService:
     def find_club_members(self, club_id):
         pass
 
+    @abstractmethod
+    def persist_message(self, message):
+        pass
+
 
 class DBServiceImpl(DBService):
 
@@ -91,7 +95,7 @@ class DBServiceImpl(DBService):
 
     def update_club(self, club):
         q = Query.construct(**self.config)
-        q.table('clubs').update(club).where('id = {}'.format(club['id']))
+        q.table('clubs').update(**club).where('id = {}'.format(club['id']))
         q.exec()
         return club
 
@@ -115,3 +119,10 @@ class DBServiceImpl(DBService):
                                     'password')\
             .join('users', {'user_id': 'id'}).where('users_clubs.club_id = {}'.format(club_id))
         return q.fetch_all()
+
+    def persist_message(self, message):
+        q = Query.construct(**self.config)
+        return q.table('chat_messages')\
+            .save(**message)\
+            .returning('id')\
+            .fetch_one()

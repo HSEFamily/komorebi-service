@@ -1,6 +1,8 @@
 import pprint
 import unittest
 
+import datetime
+
 from injector import Injector
 from komorebi.config import DBConfig
 from komorebi.domain import DBService
@@ -60,7 +62,29 @@ class DomainTest(unittest.TestCase):
         pprint.pprint(club)
         pprint.pprint(members)
 
+    def test_update_club(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        club = {
+            'id': 16,
+            'name': 'The Cure',
+            'description': 'Old school gothic'
+        }
+        dbs.update_club(club)
+
     def test_delete_club(self):
         inj = Injector(DBConfig())
         dbs = inj.get(DBService)
         dbs.delete_club(16)
+
+    def test_persist_chat_message(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        message = {
+            'from_id': 2,
+            'to_id': 2,
+            'date': datetime.datetime.now(),
+            'message': 'Hello!'
+        }
+        pprint.pprint(dbs.persist_message(message))
+
