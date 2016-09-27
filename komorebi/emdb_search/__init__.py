@@ -1,3 +1,3 @@
-from .parserimpl import Parser
-from .parserimpl import ParserImpl
+from .parser import Parser
+from .parser import ParserImpl
 
