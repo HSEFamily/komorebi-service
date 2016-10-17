@@ -39,6 +39,25 @@ def find_club_members(club_id):
     return dbservice.find_club_members(club_id)
 
 
+def find_user_clubs(user_id):
+    return dbservice.find_user_clubs(user_id)
+
+
+def add_user_movie(user_id, movie):
+    dbservice.add_user_movie(user_id, movie)
+
+
+def find_user_movies(user_id):
+    return dbservice.find_user_movies(user_id)
+
+
+def rate_movie(user_id, movie):
+    dbservice.rate_movie(user_id, movie)
+
+
+def delete_user_movie(user_id, movie_id):
+    dbservice.delete_user_movie(user_id, movie_id)
+
+
 def persist_message(message):
-    # The fuck is that? oO
-    pass
+    return dbservice.persist_message(message)

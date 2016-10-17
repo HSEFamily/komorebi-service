@@ -1,2 +1,2 @@
 from .dbconfig import DBConfig
-from .parserconfig import ParserConfig
+# from .parserconfig import ParserConfig
