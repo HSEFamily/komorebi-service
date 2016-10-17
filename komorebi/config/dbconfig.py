@@ -20,7 +20,6 @@ class DBConfig(Module):
             conn_f=CF()
         )
 
-
 class CF(ConnFactory):
 
     def connect(self, conn_s):
