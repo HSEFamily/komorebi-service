@@ -88,3 +88,80 @@ class DomainTest(unittest.TestCase):
         }
         pprint.pprint(dbs.persist_message(message))
 
+    def test_find_user_movies(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        pprint.pprint(dbs.find_user_movies(12))
+
+    def test_find_user_clubs(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        pprint.pprint(dbs.find_user_clubs(12))
+
+    def test_delete_user_movie(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        dbs.delete_user_movie(12, 2)
+
+    def test_rate_movie(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        dbs.rate_movie({
+            'id': 1,
+            'user_id': 12,
+            'movie_id': 1,
+            'status': 'watched',
+            'rating': 5,
+            'comment': 'Super!'
+        })
+
+    def test_add_movie(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        dbs.add_user_movie(12, {
+            "id": 67,
+            "name": "The Hunger",
+            "year": datetime.date(1982, 1, 1),
+            "description": "Gothic",
+            "tagline": "Gothic",
+            "duration": "92",
+            "genre": [
+                'gothic'
+            ],
+            "country": [
+                'UK'
+            ],
+            "picture": "none",
+            "director": {
+                'id': 87,
+                'name': 'Master'
+            },
+            "composer": {
+                'id': 34,
+                'name': 'Master'
+            },
+            "producers": [
+                {
+                    'id': 98,
+                    'name': 'Master'
+                }
+            ],
+            "script": [
+                {
+                'id': 58,
+                'name': 'Master'
+                }
+            ],
+            "editor": {
+                'id': 45,
+                'name': 'Master'
+            },
+            "operator": {
+                'id': 92,
+                'name': 'Master'
+            },
+            "cast": [{
+                'id': 102,
+                'name': 'Master'
+            }]
+        })
