@@ -11,12 +11,20 @@ class DBConfig(Module):
     @singleton
     @provides(DBService)
     def provide_db_service(self):
+        # return DBServiceImpl(
+        #     dialect=SQLDialect.postgres,
+        #     db='komorebi_db',
+        #     host='95.85.24.237',
+        #     user='komorebi_psql',
+        #     password='komorebi95root',
+        #     conn_f=CF()
+        # )
         return DBServiceImpl(
             dialect=SQLDialect.postgres,
-            db='komorebi_db',
-            host='95.85.24.237',
-            user='komorebi_psql',
-            password='komorebi95root',
+            db='komorebi',
+            host='localhost',
+            user='egdeveloper-psql',
+            password='1Eg9Dev9Root5',
             conn_f=CF()
         )
 
