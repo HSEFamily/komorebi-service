@@ -154,7 +154,6 @@ class DBServiceImpl(DBService):
             .returning('id')\
             .fetch_one()
 
-    # TODO: add test for add_movie()
     def add_user_movie(self, user_id, movie):
         q = Query.construct(**self.config)
         q.begin().exec()
