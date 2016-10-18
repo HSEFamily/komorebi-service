@@ -43,6 +43,18 @@ class DBService:
         pass
 
     @abstractmethod
+    def find_clubs(self, search_quote):
+        pass
+
+    @abstractmethod
+    def add_club_member(self, club_member):
+        pass
+
+    @abstractmethod
+    def delete_club_member(self, club_id, member_id):
+        pass
+
+    @abstractmethod
     def add_user_movie(self, user_id, movie):
         pass
 
@@ -64,6 +76,7 @@ class DBService:
 
 
 class DBServiceImpl(DBService):
+
     def save_user(self, user):
         with Query.construct(**self.config) as _q:
             _last_id = _q.table('users') \
@@ -162,6 +175,33 @@ class DBServiceImpl(DBService):
                 .fetch_all()
             _q.commit()
         return [dict(_club) for _club in _clubs]
+
+    def find_clubs(self, search_quote):
+        with Query.construct(**self.config) as _q:
+            _clubs = _q.table('clubs')\
+                .find('*')\
+                .where("name LIKE '{0}%' OR name LIKE '%{0}'".format(search_quote))\
+                .fetch_all()
+            _q.commit()
+        return [dict(_club) for _club in _clubs]
+
+    def add_club_member(self, club_member):
+        with Query.construct(**self.config) as _q:
+            _id = _q.table('users_clubs')\
+                .save(**club_member)\
+                .returning('id')\
+                .fetch_one()
+            club_member['id'] = _id['id']
+            _q.commit()
+        return club_member
+
+    def delete_club_member(self, club_id, member_id):
+        with Query.construct(**self.config) as _q:
+            _q.table('users_clubs')\
+                .delete()\
+                .where('club_id = {0} AND user_id = {1}'.format(club_id, member_id))\
+                .exec()\
+                .commit()
 
     def persist_message(self, message):
         with Query.construct(**self.config) as _q:

@@ -178,3 +178,27 @@ class DomainTest(unittest.TestCase):
                 'name': 'Master'
             }]
         })
+
+    # 15
+    def test_find_clubs(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        pprint.pprint(dbs.find_clubs('Batcave'))
+
+    # 16
+    def test_add_club_member(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        dbs.add_club_member({
+            'user_id': 17,
+            'club_id': 1,
+            'user_role': 'visitor'
+        })
+        pprint.pprint(dbs.find_club_members(1))
+
+    # 17
+    def test_delete_club_member(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        dbs.delete_club_member(1, 17)
+        pprint.pprint(dbs.find_club_members(1))
