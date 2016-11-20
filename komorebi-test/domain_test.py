@@ -207,3 +207,6 @@ class DomainTest(unittest.TestCase):
         inj = Injector(DBConfig())
         dbs = inj.get(DBService)
         pprint.pprint(dbs.find_user_by_username('finU'))
+
+
+
