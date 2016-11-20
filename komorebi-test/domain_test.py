@@ -202,3 +202,8 @@ class DomainTest(unittest.TestCase):
         dbs = inj.get(DBService)
         dbs.delete_club_member(1, 17)
         pprint.pprint(dbs.find_club_members(1))
+
+    def test_find_user_by_name(self):
+        inj = Injector(DBConfig())
+        dbs = inj.get(DBService)
+        pprint.pprint(dbs.find_user_by_username('finU'))

@@ -27,6 +27,10 @@ class DBService:
         pass
 
     @abstractmethod
+    def find_user_by_username(self, name):
+        pass
+
+    @abstractmethod
     def delete_user(self, user_id):
         pass
 
@@ -76,6 +80,15 @@ class DBService:
 
 
 class DBServiceImpl(DBService):
+
+    def find_user_by_username(self, name):
+        with Query.construct(**self.config) as _q:
+            _user = _q.table('users')\
+                .find()\
+                .where("username = '{}'".format(name))\
+                .fetch_one()
+            _q.commit()
+        return _user
 
     def save_user(self, user):
         with Query.construct(**self.config) as _q:
