@@ -1,3 +1,5 @@
+import hashlib
+
 from injector import Injector
 
 from config import DBConfig
@@ -10,33 +12,86 @@ dbservice = injector.get(DBService)
 def save_user(user):
     dbservice.save_user(user)
 
-def find_user(user_id):
-    return dbservice.find_user(user_id)
+def auth_user(username, password):
+    user = dbservice.find_user_by_username(username)
+    if user['password'] == password:
+        # Generate and return token
+        return generate_token(username, password)
+    else:
+        # Authentication failed; no token
+        return ''
 
-def update_user(id, user_dict):
+def find_user(token, user_id):
+    user = dbservice.find_user(user_id)
+    username = user['username']
+    password = user['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        return user
+
+def update_user(token, id, user_dict):
     user_dict['id'] = id
-    dbservice.update_user(user_dict)
+    username = user_dict['username']
+    password = user_dict['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        dbservice.update_user(user_dict)
 
-def delete_user(user_id):
-    dbservice.delete_user(user_id)
+def delete_user(token, user_id):
+    user = dbservice.find_user(user_id)
+    username = user['username']
+    password = user['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        dbservice.delete_user(user_id)
 
-def watch_movie(user_id, movie_id):
-    dbservice.add_user_movie(user_id, movie_id)
+def watch_movie(token, user_id, movie_id):
+    user = dbservice.find_user(user_id)
+    username = user['username']
+    password = user['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        dbservice.add_user_movie(user_id, movie_id)
 
-def unwatch_movie(user_id, movie_id):
-    dbservice.delete_user_movie(user_id, movie_id)
+def unwatch_movie(token, user_id, movie_id):
+    user = dbservice.find_user(user_id)
+    username = user['username']
+    password = user['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        dbservice.delete_user_movie(user_id, movie_id)
 
-def set_review(user_id, movie_id, review_dict):
-    dbservice.rate_movie(user_id, movie_id, movie_rate)
+def set_review(token, user_id, movie_id, review_dict):
+    user = dbservice.find_user(user_id)
+    username = user['username']
+    password = user['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        dbservice.rate_movie(user_id, movie_id, movie_rate)
 
-def get_user_movies(user_id):
-    return dbservice.find_user_movies(user_id)
+def get_user_movies(token, user_id):
+    user = dbservice.find_user(user_id)
+    username = user['username']
+    password = user['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        return dbservice.find_user_movies(user_id)
 
-def create_club(user_id, club_dict):
-    dbservice.create_club(club_dict, user_id)
+def create_club(token, user_id, club_dict):
+    user = dbservice.find_user(user_id)
+    username = user['username']
+    password = user['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        dbservice.create_club(club_dict, user_id)
 
-def get_user_clubs(user_id):
-    return dbservice.find_user_clubs(user_id)
+def get_user_clubs(token, user_id):
+    user = dbservice.find_user(user_id)
+    username = user['username']
+    password = user['password']
+    real_token = generate_token(username, password)
+    if token == real_token:
+        return dbservice.find_user_clubs(user_id)
 
 # Club methods
 def update_club(id, club_dict):
@@ -66,3 +121,12 @@ def find_movies(sq):
 def persist_message(message):
     # The fuck is that? oO
     pass
+
+# Auth methods
+def generate_token(username, password):
+    h = hashlib.sha256()
+    salt = 'correct horse battery staple'
+    h.update(username.encode('utf-8'))
+    h.update(salt.encode('utf-8'))
+    h.update(password.encode('utf-8'))
+    return h.hexdigest()
